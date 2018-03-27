@@ -1,0 +1,6 @@
+{
+  "title" : "app name",
+  "background_color" : "white",
+  "labels" : ["google" , "facebook", "git"],
+  "images" : "default_image_link"
+}

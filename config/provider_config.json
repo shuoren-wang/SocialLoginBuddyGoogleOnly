@@ -1,0 +1,12 @@
+{
+    "issuer": "https://accounts.google.com",
+    "client_id": "770238485156-tpisc794j0o1hm8rvbtm6mmc9imb3ej5.apps.googleusercontent.com",
+    "client_secret": "9TCoYmhHYEcThb3xY5s4BmSg",
+    "redirect_uri": "https://myredirect.com/login?provider=google&action=login",
+    "authorization_endpoint": "https://accounts.google.com/o/oauth2/v2/auth",
+    "token_endpoint": "https://www.googleapis.com/oauth2/v4/token",
+    "userinfo_endpoint": "https://www.googleapis.com/oauth2/v3/userinfo",
+    "jwks_uri": "https://www.googleapis.com/oauth2/v3/certs",
+    "scope": "openid profile email",
+    "response_type": "code"
+}

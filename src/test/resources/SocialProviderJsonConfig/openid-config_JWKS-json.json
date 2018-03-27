@@ -1,0 +1,5 @@
+{"provider": {
+  "issuer": "https://provider.com",
+  "client_id": "slfgksgflsgjsgf",
+  "client_secret": "adsfasfasfasdf",
+  "redirect_uri": "https://myredirect_uri.com/login?provider=provider&action=login"}}
