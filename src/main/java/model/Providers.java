@@ -15,4 +15,11 @@ public class Providers {
                 .map(Provider::getName)
                 .collect(Collectors.toList());
     }
+
+    public Provider getProviderByName(String name){
+        return providers.stream()
+                .filter(provider -> provider.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
 }
