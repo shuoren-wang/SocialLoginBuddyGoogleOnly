@@ -4,18 +4,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>social-login-buddy</groupId>
-    <artifactId>SocialLoginBuddy</artifactId>
-    <packaging>jar</packaging>
+    <groupId>co-op-project</groupId>
+    <artifactId>social-login-buddy</artifactId>
     <version>1.0</version>
-    <name>SocialLoginBuddy</name>
+    <packaging>jar</packaging>
+    <name>social-login-buddy</name>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.glassfish.jersey</groupId>
                 <artifactId>jersey-bom</artifactId>
-                <version>2.26</version>
+                <version>2.17</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -27,6 +27,11 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>6.0.6</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
@@ -95,20 +100,20 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>simple-jersey-project</id>
+                        <id>social-login-buddy</id>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.rest.ServicesResourceTransformer"/>
-                                <transformer implementation="org.apache.maven.plugins.shade.rest.ManifestResourceTransformer">
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>application.Application</mainClass>
                                 </transformer>
                                 <transformer implementation="com.github.edwgiz.mavenShadePlugin.log4j2CacheTransformer.PluginsCacheFileTransformer"/>
                             </transformers>
-                            <finalName>simple-jersey-project</finalName>
+                            <finalName>social-login-buddy</finalName>
                         </configuration>
                     </execution>
                 </executions>

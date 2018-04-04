@@ -1,4 +1,4 @@
-package model;
+package form;
 
 /**
  * https://developers.google.com/identity/sign-in/web/reference#googleusergetbasicprofile
