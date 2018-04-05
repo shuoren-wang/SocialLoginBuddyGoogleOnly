@@ -9,6 +9,7 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import rest.Login;
+import util.Util;
 
 import java.io.IOException;
 import java.net.URI;
@@ -35,7 +36,7 @@ public class Application {
         try {
             BasicConfigurator.configure();
             startServer();
-            LOGGER.info("Server started.");
+            LOGGER.info("Server started.." + Util.LOGIN_URL);
         } catch (Exception e) {
             LOGGER.info("Failed to start server.", e);
             System.exit(-1);

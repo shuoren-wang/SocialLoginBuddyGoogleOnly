@@ -5,8 +5,8 @@ import model.Providers;
 import java.util.stream.Collectors;
 
 public class Util {
-    public static String BASE_URL = "http://127.0.0.1:1234";
-    public static String REDIRECT_URL = BASE_URL + "/login/redirect";
+    public static String LOGIN_URL = "http://127.0.0.1:1234/login";
+    public static String REDIRECT_URL = LOGIN_URL + "/redirect";
 
     /**
      * load provider configs from config folder

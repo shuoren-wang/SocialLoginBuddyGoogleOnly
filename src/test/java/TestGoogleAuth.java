@@ -6,6 +6,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import util.Util;
 
 import java.io.IOException;
 
@@ -13,8 +14,6 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.fail;
 
 public class TestGoogleAuth {
-    public static String GOOGLE_URL_TOKEN = "https://www.googleapis.com/oauth2/v4/token";
-    public static String GOOGLE_URL_USERINFO = "https://www.googleapis.com/oauth2/v3/userinfo";
 
     private static HttpServer testServer;
 
@@ -39,7 +38,7 @@ public class TestGoogleAuth {
     public void testUserOk() {
         int expectId = 1;
         String expectName = "user_1";
-        String url = Application.BASE_URL + "/user/" + expectId + "/info";
+        String url = Util.LOGIN_URL + "/user/" + expectId + "/info";
 
         Response response = given().
                 when().
