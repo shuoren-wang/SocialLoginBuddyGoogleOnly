@@ -3,7 +3,6 @@ package rest;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import util.ParameterConstant;
 import util.TestConstant;
 
 import javax.ws.rs.*;
@@ -19,9 +18,18 @@ public class Login {
 
     @GET
     @Path("/")
-    public Response redirectToSocialServer() throws URISyntaxException {
-        URI location = new URI(getGoogleAuthorizationUrl());
-        return Response.temporaryRedirect(location).build();
+    public Response redirectToSocialServer(
+            @QueryParam("provider") String provider
+    ) throws URISyntaxException {
+        if("google".equalsIgnoreCase(provider)) {
+            URI location = new URI(getGoogleAuthorizationUrl());
+            return Response.temporaryRedirect(location).build();
+        }
+
+        String errMessage = "Error: Cannot find provider";
+        LOGGER.error(errMessage);
+        return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
+
     }
 
     private String getGoogleAuthorizationUrl(){

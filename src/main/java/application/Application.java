@@ -36,7 +36,8 @@ public class Application {
         try {
             BasicConfigurator.configure();
             startServer();
-            LOGGER.info("Server started.." + Util.LOGIN_URL);
+            //todo change url
+            LOGGER.info("Server started.." + Util.LOGIN_URL + "?provider=google");
         } catch (Exception e) {
             LOGGER.info("Failed to start server.", e);
             System.exit(-1);
