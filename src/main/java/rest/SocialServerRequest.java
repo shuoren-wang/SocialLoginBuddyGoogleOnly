@@ -1,6 +1,5 @@
 package rest;
 
-import application.Application;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.AccessToken;
@@ -11,7 +10,6 @@ import util.Constant;
 import util.TestConstant;
 import util.Util;
 
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.Entity;
@@ -23,17 +21,14 @@ import java.io.IOException;
 
 
 public class SocialServerRequest {
-    private static final Logger LOGGER = LogManager.getLogger(Application.class);
+    private static final Logger LOGGER = LogManager.getLogger(SocialServerRequest.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-
     public static String getTokenFromServer(String tokenUrl, String code) throws Exception {
-        Client client = ClientBuilder.newClient();
-        String requestBody = getTokenRequestBody(code);
-
-        Response response = client.target(tokenUrl)
+        Response response = ClientBuilder.newClient()
+                .target(tokenUrl)
                 .request()
-                .post(Entity.entity(requestBody, MediaType.APPLICATION_FORM_URLENCODED_TYPE));
+                .post(Entity.entity(getTokenRequestBody(code), MediaType.APPLICATION_FORM_URLENCODED_TYPE));
 
         return getAccessToken(tokenUrl, response);
     }
@@ -43,11 +38,11 @@ public class SocialServerRequest {
         requestBody += Constant.CLIENT_ID + "=" + TestConstant.CLIENT_ID;
         requestBody += "&";
         requestBody += Constant.CLIENT_SECRET + "=" + TestConstant.CLIENT_SECRET;
-        requestBody +="&";
+        requestBody += "&";
         requestBody += Constant.GRANT_TYPE + "=" + Constant.AUTHORIZATION_CODE;
-        requestBody +="&";
+        requestBody += "&";
         requestBody += Constant.REDIRECT_URL + "=" + Util.REDIRECT_URL;
-        requestBody +="&";
+        requestBody += "&";
         requestBody += Constant.CODE + "=" + code;
 
         return requestBody;
@@ -82,9 +77,8 @@ public class SocialServerRequest {
             throw new IllegalArgumentException(errorMessage);
         }
 
-        Client client = ClientBuilder.newClient();
-
-        Response response = client.target(userInfoUrl)
+        Response response = ClientBuilder.newClient()
+                .target(userInfoUrl)
                 .register ((ClientRequestFilter) requestContext ->
                             requestContext.getHeaders().add(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .request(MediaType.APPLICATION_JSON_TYPE)

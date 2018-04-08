@@ -1,9 +1,12 @@
 package rest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import util.Constant;
 import util.TestConstant;
+import util.Util;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -12,37 +15,43 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 
-@Path("login")
-public class Login {
-    private static final Logger LOGGER = LogManager.getLogger(Login.class);
+@Path("authenticate")
+public class Authenticate {
+    private static final Logger LOGGER = LogManager.getLogger(Authenticate.class);
 
     @GET
     @Path("/")
     public Response redirectToSocialServer(
-            @QueryParam("provider") String provider
+            @QueryParam("state") String clientState,
+            @QueryParam("redirect_uri") String redirectUri
     ) throws URISyntaxException {
-        if("google".equalsIgnoreCase(provider)) {
-            URI location = new URI(getGoogleAuthorizationUrl());
-            return Response.temporaryRedirect(location).build();
+        if(StringUtils.isEmpty(clientState) || StringUtils.isEmpty(redirectUri)) {
+            //todo: try ping url, if timeout => throw error
+            String errMessage = "Error: Missing state or redirect_uri";
+            LOGGER.error(errMessage);
+            return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
         }
 
-        String errMessage = "Error: Cannot find provider";
-        LOGGER.error(errMessage);
-        return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
+        URI location = new URI(getGoogleAuthorizationUrl(getState(clientState, redirectUri)));
+        return Response.temporaryRedirect(location).build();
 
     }
 
-    private String getGoogleAuthorizationUrl(){
+    private String getState(String clientState, String clientRedirectUri){
+        return clientState + clientRedirectUri;
+    }
+
+    private String getGoogleAuthorizationUrl(String state){
         return  "https://accounts.google.com/o/oauth2/v2/auth?" +
-                "client_id=" + TestConstant.CLIENT_ID +
+                Constant.CLIENT_ID + "=" + TestConstant.CLIENT_ID +
                 "&" +
-                "response_type=code" +
+                Constant.RESPONSE_TYPE + "=" + "code" +
                 "&" +
-                "scope=openid%20profile%20email" +
+                "scope=" + TestConstant.SCOPE_VALUE +
                 "&" +
-                "redirect_uri=http://127.0.0.1:1234/login/redirect" +
+                "redirect_uri=" + Util.REDIRECT_URL +
                 "&" +
-                "state=security_token%3D138r5719ru3e1%26url%3D";
+                "state=" + state;
     }
 
     @GET
