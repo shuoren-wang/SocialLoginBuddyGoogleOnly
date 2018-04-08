@@ -1,5 +1,6 @@
 package rest;
 
+import model.AccessToken;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.LogManager;
@@ -23,16 +24,15 @@ public class Authenticate {
     @Path("/")
     public Response redirectToSocialServer(
             @QueryParam("state") String clientState,
-            @QueryParam("redirect_uri") String redirectUri
+            @QueryParam("redirect_uri") String clientRedirectUri
     ) throws URISyntaxException {
-        if(StringUtils.isEmpty(clientState) || StringUtils.isEmpty(redirectUri)) {
+        if(StringUtils.isEmpty(clientState) || StringUtils.isEmpty(clientRedirectUri)) {
             //todo: try ping url, if timeout => throw error
             String errMessage = "Error: Missing state or redirect_uri";
             LOGGER.error(errMessage);
             return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
         }
-
-        URI location = new URI(getGoogleAuthorizationUrl(getState(clientState, redirectUri)));
+        URI location = new URI(getAuthorizationUrl(TestConstant.GOOGLE_URL_AUTH, getState(clientState, clientRedirectUri)));
         return Response.temporaryRedirect(location).build();
 
     }
@@ -41,17 +41,17 @@ public class Authenticate {
         return clientState + clientRedirectUri;
     }
 
-    private String getGoogleAuthorizationUrl(String state){
-        return  "https://accounts.google.com/o/oauth2/v2/auth?" +
-                Constant.CLIENT_ID + "=" + TestConstant.CLIENT_ID +
+    private String getAuthorizationUrl(String url, String state){
+        return  url + "?" +
+                Constant.CLIENT_ID + "=" + TestConstant.CLIENT_ID_VALUE +
                 "&" +
-                Constant.RESPONSE_TYPE + "=" + "code" +
+                Constant.RESPONSE_TYPE + "=" + Constant.CODE +
                 "&" +
-                "scope=" + TestConstant.SCOPE_VALUE +
+                Constant.SCOPE + "=" + TestConstant.SCOPE_VALUE +
                 "&" +
-                "redirect_uri=" + Util.REDIRECT_URL +
+                Constant.REDIRECT_URL + "=" + Util.REDIRECT_URL +
                 "&" +
-                "state=" + state;
+                Constant.STATE + "=" + state;
     }
 
     @GET
@@ -67,11 +67,12 @@ public class Authenticate {
             return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
         }
 
-        String token = SocialServerRequest.getTokenFromServer(TestConstant.GOOGLE_URL_TOKEN,code);
+        AccessToken token = SocialServerRequest.getTokenFromSocialServer(TestConstant.GOOGLE_URL_TOKEN,code);
+        String accessToken = token.getAccessToken();
+        String idToken = token.getIdToken();
+        String userInfo = SocialServerRequest.getUserInfo(TestConstant.GOOGLE_URL_USERINFO, accessToken);
 
-        String userInfo = SocialServerRequest.getUserInfo(TestConstant.GOOGLE_URL_USERINFO, token);
-
-        return Response.ok(userInfo).build();
+        URI location = new URI(Util.getTempClientRedirectUrl(userInfo, idToken));
+        return Response.temporaryRedirect(location).build();
     }
-
 }

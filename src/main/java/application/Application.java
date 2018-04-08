@@ -7,7 +7,6 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
-
 import rest.Authenticate;
 import util.Util;
 
@@ -17,7 +16,7 @@ import java.net.URI;
 
 public class Application {
     private static final Logger LOGGER = LogManager.getLogger(Application.class);
-    public static String BASE_URL = "http://127.0.0.1:1234";
+    private static final String BASE_URL = "http://127.0.0.1:1234";
 
     private Application() {}
 
@@ -36,8 +35,7 @@ public class Application {
         try {
             BasicConfigurator.configure();
             startServer();
-            //todo change url
-            LOGGER.info("Server started.." + Util.LOGIN_URL + "?provider=google");
+            LOGGER.info("Server started.." + Util.getTempUrl());
         } catch (Exception e) {
             LOGGER.info("Failed to start server.", e);
             System.exit(-1);

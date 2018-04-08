@@ -24,7 +24,7 @@ public class SocialServerRequest {
     private static final Logger LOGGER = LogManager.getLogger(SocialServerRequest.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    public static String getTokenFromServer(String tokenUrl, String code) throws Exception {
+    public static AccessToken getTokenFromSocialServer(String tokenUrl, String code) throws Exception {
         Response response = ClientBuilder.newClient()
                 .target(tokenUrl)
                 .request()
@@ -35,9 +35,9 @@ public class SocialServerRequest {
 
     private static String getTokenRequestBody(String code){
         String requestBody = "";
-        requestBody += Constant.CLIENT_ID + "=" + TestConstant.CLIENT_ID;
+        requestBody += Constant.CLIENT_ID + "=" + TestConstant.CLIENT_ID_VALUE;
         requestBody += "&";
-        requestBody += Constant.CLIENT_SECRET + "=" + TestConstant.CLIENT_SECRET;
+        requestBody += Constant.CLIENT_SECRET + "=" + TestConstant.CLIENT_SECRET_VALUE;
         requestBody += "&";
         requestBody += Constant.GRANT_TYPE + "=" + Constant.AUTHORIZATION_CODE;
         requestBody += "&";
@@ -48,13 +48,12 @@ public class SocialServerRequest {
         return requestBody;
     }
 
-    private static String getAccessToken(String url, Response response) throws Exception{
+    private static AccessToken getAccessToken(String url, Response response) throws Exception{
         String responseString = response.readEntity(String.class);
 
         if(response.getStatus() == HttpStatus.SC_OK) {
             try {
-                AccessToken accessToken = MAPPER.readValue(responseString, AccessToken.class);
-                return accessToken.getAccessToken();
+                return MAPPER.readValue(responseString, AccessToken.class);
             } catch (JsonParseException e) {
                 LOGGER.warn("unable to retrieve access token : " + e.getMessage());
                 throw e;
