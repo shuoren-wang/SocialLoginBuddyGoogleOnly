@@ -1,6 +1,8 @@
 package rest;
 
-import model.AccessToken;
+import manager.SessionHandler;
+import manager.SocialServerRequestHandler;
+import model.Token;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.LogManager;
@@ -9,11 +11,13 @@ import util.Constant;
 import util.TestConstant;
 import util.Util;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 
 @Path("authenticate")
@@ -25,16 +29,21 @@ public class Authenticate {
     public Response redirectToSocialServer(
             @QueryParam("state") String clientState,
             @QueryParam("redirect_uri") String clientRedirectUri
-    ) throws URISyntaxException {
+    ) throws Exception {
         if(StringUtils.isEmpty(clientState) || StringUtils.isEmpty(clientRedirectUri)) {
             //todo: try ping url, if timeout => throw error
             String errMessage = "Error: Missing state or redirect_uri";
             LOGGER.error(errMessage);
             return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
         }
-        URI location = new URI(getAuthorizationUrl(TestConstant.GOOGLE_URL_AUTH, getState(clientState, clientRedirectUri)));
-        return Response.temporaryRedirect(location).build();
 
+        String appState = getState(clientState, clientRedirectUri);
+
+        SessionHandler.addNewSession(appState, clientState, clientRedirectUri);
+
+        URI location = new URI(getAuthorizationUrl(TestConstant.GOOGLE_URL_AUTH, appState));
+
+        return Response.temporaryRedirect(location).build();
     }
 
     private String getState(String clientState, String clientRedirectUri){
@@ -67,12 +76,15 @@ public class Authenticate {
             return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
         }
 
-        AccessToken token = SocialServerRequest.getTokenFromSocialServer(TestConstant.GOOGLE_URL_TOKEN,code);
+        Token token = SocialServerRequestHandler.getTokenFromSocialServer(TestConstant.GOOGLE_URL_TOKEN, code);
         String accessToken = token.getAccessToken();
         String idToken = token.getIdToken();
-        String userInfo = SocialServerRequest.getUserInfo(TestConstant.GOOGLE_URL_USERINFO, accessToken);
+        String userInfo = SocialServerRequestHandler.getUserInfo(TestConstant.GOOGLE_URL_USERINFO, accessToken);
 
-        URI location = new URI(Util.getTempClientRedirectUrl(userInfo, idToken));
-        return Response.temporaryRedirect(location).build();
+        //todo change to redirect
+        return Response.ok(userInfo).build();
+
+//        URI location = new URI(Util.getTempClientRedirectUrl(userInfo, idToken));
+//        return Response.temporaryRedirect(location).build();
     }
 }

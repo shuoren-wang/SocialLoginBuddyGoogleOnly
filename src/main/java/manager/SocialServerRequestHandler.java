@@ -1,8 +1,8 @@
-package rest;
+package manager;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import model.AccessToken;
+import model.Token;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -20,17 +20,17 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 
-public class SocialServerRequest {
-    private static final Logger LOGGER = LogManager.getLogger(SocialServerRequest.class);
+public class SocialServerRequestHandler {
+    private static final Logger LOGGER = LogManager.getLogger(SocialServerRequestHandler.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    public static AccessToken getTokenFromSocialServer(String tokenUrl, String code) throws Exception {
+    public static Token getTokenFromSocialServer(String tokenUrl, String code) throws Exception {
         Response response = ClientBuilder.newClient()
                 .target(tokenUrl)
                 .request()
                 .post(Entity.entity(getTokenRequestBody(code), MediaType.APPLICATION_FORM_URLENCODED_TYPE));
 
-        return getAccessToken(tokenUrl, response);
+        return getToken(tokenUrl, response);
     }
 
     private static String getTokenRequestBody(String code){
@@ -48,12 +48,12 @@ public class SocialServerRequest {
         return requestBody;
     }
 
-    private static AccessToken getAccessToken(String url, Response response) throws Exception{
+    private static Token getToken(String url, Response response) throws Exception{
         String responseString = response.readEntity(String.class);
 
         if(response.getStatus() == HttpStatus.SC_OK) {
             try {
-                return MAPPER.readValue(responseString, AccessToken.class);
+                return MAPPER.readValue(responseString, Token.class);
             } catch (JsonParseException e) {
                 LOGGER.warn("unable to retrieve access token : " + e.getMessage());
                 throw e;

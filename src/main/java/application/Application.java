@@ -8,6 +8,8 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import rest.Authenticate;
+import rest.Cookie;
+import rest.FakeClient;
 import util.Util;
 
 import java.io.IOException;
@@ -23,6 +25,8 @@ public class Application {
     public static HttpServer startServer() throws IOException {
         ResourceConfig resourceConfig = new ResourceConfig()
                 .register(Authenticate.class)
+                .register(Cookie.class)
+                .register(FakeClient.class)
                 .register(JacksonFeature.class);
 
         HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URL), resourceConfig);

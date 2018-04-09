@@ -1,41 +1,27 @@
 package model;
 
 public class Session {
-    private String clientSession;
-    private String buddySession;
-    private String providerCode;
-    private TokenRequestBody token;
+    private String redirectUrl;
+    private String clientState;
 
-    public String getClientSession() {
-        return clientSession;
+    public Session(String redirectUrl, String clientState) {
+        this.redirectUrl = redirectUrl;
+        this.clientState = clientState;
     }
 
-    public void setClientSession(String clientSession) {
-        this.clientSession = clientSession;
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
 
-    public String getBuddySession() {
-        return buddySession;
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
     }
 
-    public void setBuddySession(String buddySession) {
-        this.buddySession = buddySession;
+    public String getClientState() {
+        return clientState;
     }
 
-    public String getProviderCode() {
-        return providerCode;
+    public void setClientState(String clientState) {
+        this.clientState = clientState;
     }
-
-    public void setProviderCode(String providerCode) {
-        this.providerCode = providerCode;
-    }
-
-    public TokenRequestBody getToken() {
-        return token;
-    }
-
-    public void setToken(TokenRequestBody token) {
-        this.token = token;
-    }
-
 }

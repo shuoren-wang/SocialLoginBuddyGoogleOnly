@@ -38,7 +38,7 @@ public class TestGoogleAuth {
     public void testUserOk() {
         int expectId = 1;
         String expectName = "user_1";
-        String url = Util.ROOT_URL + "/user/" + expectId + "/info";
+        String url = Util.AUTHENTICATE_URL + "/user/" + expectId + "/info";
 
         Response response = given().
                 when().

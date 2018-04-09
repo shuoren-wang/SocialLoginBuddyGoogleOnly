@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties({ "token_type", "expires_in"})
-public class AccessToken {
+public class Token {
     @JsonProperty("access_token")
-    String accessToken;
+    private String accessToken;
     @JsonProperty("id_token")
-    String idToken;
+    private String idToken;
 
     public String getAccessToken() {
         return accessToken;
