@@ -15,7 +15,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 
@@ -37,17 +40,17 @@ public class Authenticate {
             return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
         }
 
-        String appState = getState(clientState, clientRedirectUri);
-
-        SessionHandler.addNewSession(appState, clientState, clientRedirectUri);
-
+        String appState = getState(clientRedirectUri, clientState);
         URI location = new URI(getAuthorizationUrl(TestConstant.GOOGLE_URL_AUTH, appState));
 
-        return Response.temporaryRedirect(location).build();
+        return Response
+                .temporaryRedirect(location)
+                .cookie(new NewCookie(appState, clientState))
+                .build();
     }
 
-    private String getState(String clientState, String clientRedirectUri){
-        return clientState + clientRedirectUri;
+    private String getState(String clientRedirectUri, String clientState){
+        return clientRedirectUri + clientState;
     }
 
     private String getAuthorizationUrl(String url, String state){
@@ -67,24 +70,24 @@ public class Authenticate {
     @Path("redirect")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getUserInfo(
-        @QueryParam("state") String state,
-        @QueryParam("code") String code
+        @QueryParam("state") String appState,
+        @QueryParam("code") String code,
+        @Context HttpHeaders headers
     ) throws Exception {
-        if(code == null || state == null){
+        if(code == null || appState == null){
             String errMessage = "Error: code or state is null";
             LOGGER.error(errMessage);
             return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
         }
 
+        String clientState = SessionHandler.getCookieValue(appState, headers);
         Token token = SocialServerRequestHandler.getTokenFromSocialServer(TestConstant.GOOGLE_URL_TOKEN, code);
         String accessToken = token.getAccessToken();
         String idToken = token.getIdToken();
         String userInfo = SocialServerRequestHandler.getUserInfo(TestConstant.GOOGLE_URL_USERINFO, accessToken);
 
-        //todo change to redirect
-        return Response.ok(userInfo).build();
-
-//        URI location = new URI(Util.getTempClientRedirectUrl(userInfo, idToken));
-//        return Response.temporaryRedirect(location).build();
+        //todo change url
+        URI location = new URI(Util.getTempClientRedirectUrl(clientState, idToken, userInfo, accessToken));
+        return Response.temporaryRedirect(location).build();
     }
 }

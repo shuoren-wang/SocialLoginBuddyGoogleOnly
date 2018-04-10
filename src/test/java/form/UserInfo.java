@@ -1,15 +1,5 @@
 package form;
 
-/**
- * https://developers.google.com/identity/sign-in/web/reference#googleusergetbasicprofile
- * You can retrieve the properties of gapi.auth2.BasicProfile with the following methods:
- BasicProfile.getId()
- BasicProfile.getName()
- BasicProfile.getGivenName()
- BasicProfile.getFamilyName()
- BasicProfile.getImageUrl()
- BasicProfile.getEmail()
- */
 public class UserInfo {
     private String id;
     private String name;

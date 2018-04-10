@@ -14,13 +14,19 @@ public class FakeClient {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response getFakeClient(
+            @QueryParam("state") String state,
+            @QueryParam("access_token") String accessToken,
             @QueryParam("id_token") String idToken,
             @QueryParam("user_info") String userInfo
     ) {
         String message = "Welcome! " ;
-        message += "\n\n\n";
+        message += "\n\n";
+        message += "state = " + state;
+        message += "\n\n";
+        message += "access_token = " + accessToken;
+        message += "\n\n";
         message += "id_token = " + idToken;
-        message += "\n\n\n";
+        message += "\n\n";
         message += "user_info = " + userInfo;
 
         return Response.ok(message).build();

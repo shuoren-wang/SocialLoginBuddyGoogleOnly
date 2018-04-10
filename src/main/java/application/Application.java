@@ -8,7 +8,7 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import rest.Authenticate;
-import rest.Cookie;
+import util.Cookie;
 import rest.FakeClient;
 import util.Util;
 
@@ -30,7 +30,6 @@ public class Application {
                 .register(JacksonFeature.class);
 
         HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URL), resourceConfig);
-
         server.start();
         return server;
     }
