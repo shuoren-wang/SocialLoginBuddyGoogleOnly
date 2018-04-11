@@ -2,6 +2,7 @@ package rest;
 
 import manager.SessionHandler;
 import manager.SocialServerRequestHandler;
+import model.Session;
 import model.Token;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -42,6 +43,7 @@ public class Authenticate {
 
         String appState = getState(clientRedirectUri, clientState);
         URI location = new URI(getAuthorizationUrl(TestConstant.GOOGLE_URL_AUTH, appState));
+        SessionHandler.storeRedirectUri(appState, clientRedirectUri);
 
         return Response
                 .temporaryRedirect(location)
@@ -80,14 +82,16 @@ public class Authenticate {
             return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
         }
 
-        String clientState = SessionHandler.getCookieValue(appState, headers);
+        Session session = SessionHandler.getSession(appState, headers);
+        String clientState = session.getClientState();
+        String clientRedirectUri = session.getClientRedirectUrl();
+
         Token token = SocialServerRequestHandler.getTokenFromSocialServer(TestConstant.GOOGLE_URL_TOKEN, code);
         String accessToken = token.getAccessToken();
         String idToken = token.getIdToken();
         String userInfo = SocialServerRequestHandler.getUserInfo(TestConstant.GOOGLE_URL_USERINFO, accessToken);
 
-        //todo change url
-        URI location = new URI(Util.getTempClientRedirectUrl(clientState, idToken, userInfo, accessToken));
+        URI location = new URI(Util.getTempClientRedirectUrl(clientRedirectUri, clientState, idToken, userInfo, accessToken));
         return Response.temporaryRedirect(location).build();
     }
 }

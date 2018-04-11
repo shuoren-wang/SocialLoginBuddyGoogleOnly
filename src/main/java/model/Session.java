@@ -1,20 +1,20 @@
 package model;
 
 public class Session {
-    private String redirectUrl;
+    private String clientRedirectUrl;
     private String clientState;
 
-    public Session(String redirectUrl, String clientState) {
-        this.redirectUrl = redirectUrl;
+    public Session(String clientRedirectUrl, String clientState) {
+        this.clientRedirectUrl = clientRedirectUrl;
         this.clientState = clientState;
     }
 
-    public String getRedirectUrl() {
-        return redirectUrl;
+    public String getClientRedirectUrl() {
+        return clientRedirectUrl;
     }
 
-    public void setRedirectUrl(String redirectUrl) {
-        this.redirectUrl = redirectUrl;
+    public void setClientRedirectUrl(String clientRedirectUrl) {
+        this.clientRedirectUrl = clientRedirectUrl;
     }
 
     public String getClientState() {

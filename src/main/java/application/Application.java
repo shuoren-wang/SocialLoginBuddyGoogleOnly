@@ -18,7 +18,6 @@ import java.net.URI;
 
 public class Application {
     private static final Logger LOGGER = LogManager.getLogger(Application.class);
-    private static final String BASE_URL = "http://127.0.0.1:1234";
 
     private Application() {}
 
@@ -29,7 +28,7 @@ public class Application {
                 .register(FakeClient.class)
                 .register(JacksonFeature.class);
 
-        HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URL), resourceConfig);
+        HttpServer server = GrizzlyHttpServerFactory.createHttpServer(URI.create(Util.ROOT_URL), resourceConfig);
         server.start();
         return server;
     }
@@ -38,7 +37,8 @@ public class Application {
         try {
             BasicConfigurator.configure();
             startServer();
-            LOGGER.info("Server started.." + Util.getTempUrl());
+            LOGGER.info("Server started.." + Util.getTempUrl(1));
+            LOGGER.info("Server started.." + Util.getTempUrl(2));
         } catch (Exception e) {
             LOGGER.info("Failed to start server.", e);
             System.exit(-1);
