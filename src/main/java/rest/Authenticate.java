@@ -18,11 +18,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Date;
 
 
 @Path("authenticate")
@@ -67,7 +65,7 @@ public class Authenticate {
 
     @GET
     @Path("redirect")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(Constant.CONTENT_TYPE_TEXT_HTML_UTF8)
     public Response getUserInfo(
         @QueryParam("state") String appState,
         @QueryParam("code") String code,
@@ -92,11 +90,32 @@ public class Authenticate {
         SessionHandler.removeState(appState);
         LOGGER.info("Removed SocialLoginBuddy state [" + appState + "]");
 
-        //todo change url
-        URI location = new URI(Util.getTempClientRedirectUrl(clientRedirectUri, clientState, idToken, userInfo, accessToken));
+        String tmpAutoPost = "<html>\n" +
+                "<HEAD>\n" +
+                "  <META HTTP-EQUIV='PRAGMA' CONTENT='NO-CACHE'>\n" +
+                "  <META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>\n" +
+                "  <TITLE>Social Login Buddy Auto-Form POST</TITLE>\n" +
+                "</HEAD>\n" +
+                "<body onLoad=\"document.forms[0].submit()\">\n" +
+                "<NOSCRIPT>Your browser does not support JavaScript.  Please click the 'Continue' button below to proceed. <br><br></NOSCRIPT>\n" +
+                "<form action=\"" + clientRedirectUri +
+                "\" method=\"POST\">\n" +
+                "<input type=\"hidden\" name=\"userinforesponse\" value=\'" + userInfo +
+                "\'>\n" +
+                "<input type=\"hidden\" name=\"id_token\" value=\"" + idToken +
+                "\">\n" +
+                "<input type=\"hidden\" name=\"state\" value=\"" + clientState +
+                "\">\n" +
+                "<NOSCRIPT>\n" +
+                "  <INPUT TYPE=\"SUBMIT\" VALUE=\"Continue\">\n" +
+                "</NOSCRIPT>\n" +
+                "      </form>\n" +
+                "   </body>\n" +
+                "</html>";
+
+
         return Response
-                .temporaryRedirect(location)
-                .cookie(new NewCookie(headers.getCookies().get(appState), "deleted", 0, new Date(0), false, false))
+                .ok(tmpAutoPost)
                 .build();
     }
 }

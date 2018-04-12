@@ -1,6 +1,8 @@
 package rest;
 
-import javax.ws.rs.GET;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -13,22 +15,22 @@ import javax.ws.rs.core.Response;
 public class FakeClient {
 
     //todo add login parameter
-    @GET
+    @POST
     @Path("{id}")
     @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response getFakeClient(
             @PathParam("id") Integer id,
-            @QueryParam("login") String login,
-            @QueryParam("state") String state,
-            @QueryParam("access_token") String accessToken,
-            @QueryParam("id_token") String idToken,
-            @QueryParam("user_info") String userInfo
+            @FormParam("userinforesponse") String userInfo,
+            @FormParam("id_token") String idToken,
+            @FormParam("state") String state
+
     ) {
         String message = "#" + id + " Welcome! " ;
         message += "\n\n";
         message += "state = " + state;
         message += "\n\n";
-        message += "access_token = " + accessToken;
+//        message += "access_token = " + accessToken;
         message += "\n\n";
         message += "id_token = " + idToken;
         message += "\n\n";

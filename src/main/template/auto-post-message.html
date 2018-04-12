@@ -1,0 +1,18 @@
+<html>
+    <HEAD>
+        <META HTTP-EQUIV='PRAGMA' CONTENT='NO-CACHE'>
+        <META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>
+        <TITLE>Social Login Buddy Auto-Form POST</TITLE>
+    </HEAD>
+    <body onLoad="document.forms[0].submit()">
+        <NOSCRIPT>Your browser does not support JavaScript.  Please click the 'Continue' button below to proceed. <br><br></NOSCRIPT>
+        <form action="${given-redirect_uri}" method="POST">
+            <input type="hidden" name="userinforesponse" value="${base64EncodedUserinfoResponse}">
+            <input type="hidden" name="id_token" value="${id_token_as_is}">
+            <input type="hidden" name="state " value="${state}">
+            <NOSCRIPT>
+                <INPUT TYPE="SUBMIT" VALUE="Continue">
+            </NOSCRIPT>
+        </form>
+    </body>
+</html>
