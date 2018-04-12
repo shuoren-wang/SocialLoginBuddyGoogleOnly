@@ -18,6 +18,7 @@ public class FakeClient {
     @Produces(MediaType.TEXT_PLAIN)
     public Response getFakeClient(
             @PathParam("id") Integer id,
+            @QueryParam("login") String login,
             @QueryParam("state") String state,
             @QueryParam("access_token") String accessToken,
             @QueryParam("id_token") String idToken,

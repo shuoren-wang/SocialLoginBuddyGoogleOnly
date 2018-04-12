@@ -28,5 +28,11 @@ public class SessionHandler {
         MemcachedHandler.getInstance().setKeyValue(appState, clientRedirectUri);
     }
 
+    public static void removeState(String appState){
+        MemcachedHandler.getInstance().removeKey(appState);
+    }
 
+    public static String getCookieState(String clientState){
+        return "SLBCookie" + clientState;
+    }
 }

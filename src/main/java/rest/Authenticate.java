@@ -22,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Date;
 
 
 @Path("authenticate")
@@ -41,7 +42,7 @@ public class Authenticate {
             return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
         }
 
-        String appState = getState(clientRedirectUri, clientState);
+        String appState = SessionHandler.getCookieState(clientState);
         URI location = new URI(getAuthorizationUrl(TestConstant.GOOGLE_URL_AUTH, appState));
         SessionHandler.storeRedirectUri(appState, clientRedirectUri);
 
@@ -49,10 +50,6 @@ public class Authenticate {
                 .temporaryRedirect(location)
                 .cookie(new NewCookie(appState, clientState))
                 .build();
-    }
-
-    private String getState(String clientRedirectUri, String clientState){
-        return clientRedirectUri + clientState;
     }
 
     private String getAuthorizationUrl(String url, String state){
@@ -82,6 +79,7 @@ public class Authenticate {
             return Response.status(HttpStatus.SC_FORBIDDEN).entity(errMessage).build();
         }
 
+        //todo put in one class
         Session session = SessionHandler.getSession(appState, headers);
         String clientState = session.getClientState();
         String clientRedirectUri = session.getClientRedirectUrl();
@@ -91,7 +89,14 @@ public class Authenticate {
         String idToken = token.getIdToken();
         String userInfo = SocialServerRequestHandler.getUserInfo(TestConstant.GOOGLE_URL_USERINFO, accessToken);
 
+        SessionHandler.removeState(appState);
+        LOGGER.info("Removed SocialLoginBuddy state [" + appState + "]");
+
+        //todo change url
         URI location = new URI(Util.getTempClientRedirectUrl(clientRedirectUri, clientState, idToken, userInfo, accessToken));
-        return Response.temporaryRedirect(location).build();
+        return Response
+                .temporaryRedirect(location)
+                .cookie(new NewCookie(headers.getCookies().get(appState), "deleted", 0, new Date(0), false, false))
+                .build();
     }
 }

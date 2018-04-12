@@ -68,7 +68,6 @@ public class SocialServerRequestHandler {
         }
     }
 
-
     public static String getUserInfo(String userInfoUrl, String token) throws IllegalArgumentException {
         if(token == null){
             String errorMessage = "Token cannot be null";

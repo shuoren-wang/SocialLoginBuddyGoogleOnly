@@ -43,4 +43,8 @@ public class MemcachedHandler {
     public Boolean setKeyValue(String key, String value){
         return client.set(key, TIMEOUT_IN_SEC, value).isDone();
     }
+
+    public Boolean removeKey(String key){
+        return client.delete(key).isDone();
+    }
 }

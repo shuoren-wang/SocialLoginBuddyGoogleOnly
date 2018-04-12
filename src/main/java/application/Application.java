@@ -39,6 +39,7 @@ public class Application {
             startServer();
             LOGGER.info("Server started.." + Util.getTempUrl(1));
             LOGGER.info("Server started.." + Util.getTempUrl(2));
+            LOGGER.info("Server started.." + Util.getTempUrlWithParameterInRedirectUrl(2));
         } catch (Exception e) {
             LOGGER.info("Failed to start server.", e);
             System.exit(-1);
