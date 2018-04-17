@@ -25,6 +25,7 @@ public class SessionHandler {
     public static void storeRedirectUri(String appState, String clientRedirectUri){
         //todo add case when clietState already in cache ???
         //     or change clientState to appState
+        LOGGER.info("Stored SocialLoginBuddy state [" + appState + "] and client redirect url [" + clientRedirectUri + "]");
         MemcachedHandler.getInstance().setKeyValue(appState, clientRedirectUri);
     }
 

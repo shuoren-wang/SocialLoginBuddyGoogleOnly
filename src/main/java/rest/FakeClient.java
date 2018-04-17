@@ -6,7 +6,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,8 +28,6 @@ public class FakeClient {
         String message = "#" + id + " Welcome! " ;
         message += "\n\n";
         message += "state = " + state;
-        message += "\n\n";
-//        message += "access_token = " + accessToken;
         message += "\n\n";
         message += "id_token = " + idToken;
         message += "\n\n";

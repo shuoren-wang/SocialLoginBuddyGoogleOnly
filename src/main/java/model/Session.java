@@ -1,20 +1,24 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Session {
-    private String clientRedirectUrl;
+    @JsonProperty("client_redirect_uri")
+    private String clientRedirectUri;
+    @JsonProperty("client_state")
     private String clientState;
 
-    public Session(String clientRedirectUrl, String clientState) {
-        this.clientRedirectUrl = clientRedirectUrl;
+    public Session(String clientRedirectUri, String clientState) {
+        this.clientRedirectUri = clientRedirectUri;
         this.clientState = clientState;
     }
 
-    public String getClientRedirectUrl() {
-        return clientRedirectUrl;
+    public String getClientRedirectUri() {
+        return clientRedirectUri;
     }
 
-    public void setClientRedirectUrl(String clientRedirectUrl) {
-        this.clientRedirectUrl = clientRedirectUrl;
+    public void setClientRedirectUri(String clientRedirectUri) {
+        this.clientRedirectUri = clientRedirectUri;
     }
 
     public String getClientState() {

@@ -1,29 +1,21 @@
 {
-  "providers": [{
-    "issuer": "https://provider.com",
-    "client_id": "slfgksgflsgjsgf",
-    "client_secret": "adsfasfasfasdf",
-    "redirect_uri": "https://myredirect.com/login?provider=provider&action=login",
-    "authorization_endpoint": "https://provider.com/authorization",
-    "token_endpoint": "https://provider.com/token",
-    "userinfo_endpoint": "https://provider.com/userinfo",
-    "jwks_uri": "https://provider.com/jwks.json",
-    "scope": "openid profile email",
-    "response_type": "code"
-  },
-    {
-      "provider": {
-        "issuer": "https://provider.com",
-        "client_id": "slfgksgflsgjsgf",
-        "client_secret": "adsfasfasfasdf",
-        "redirect_uri": "https://myredirect_uri.com/login?provider=provider&action=login"
-      }
-    },
-    {
-      "provider": {
-        "issuer": "https://provider.com"
-      }
-    }
-  ],
-  "user_info": ["name", "email"]
+  "socialloginbuddy": {
+    "clients": [
+      "http://localhost:8080/authenticate/test",
+      "https://client.in.the.cloud.com/tool/authenticate?acion=login"
+    ],
+    "providers": [{
+      "login_hint": "google",
+      "issuer": "https://accounts.google.com",
+      "client_id": "slfgksgflsgjsgf",
+      "client_secret": "adsfasfasfasdf",
+      "redirect_uri": "https://myredirect.com/login?provider=provider&action=login",
+      "authorization_endpoint": "https://provider.com/authorization",
+      "token_endpoint": "https://provider.com/token",
+      "userinfo_endpoint": "https://provider.com/userinfo",
+      "jwks_uri": "https://provider.com/jwks.json",
+      "scope": "openid profile email",
+      "response_type": "code"
+    }]
+  }
 }

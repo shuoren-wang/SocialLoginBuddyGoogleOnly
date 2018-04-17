@@ -1,84 +1,119 @@
 package model;
 
-/**
- * {
- "issuer": "https://provider.com",
- "client_id": "slfgksgflsgjsgf",
- "client_secret": "adsfasfasfasdf",
- "redirect_uri": "https://myredirect.com/login?provider=provider&action=login",
- "authorization_endpoint": "https://provider.com/authorization",
- "token_endpoint": "https://provider.com/token",
- "userinfo_endpoint": "https://provider.com/userinfo",
- "jwks_uri": "https://provider.com/jwks.json",
- "scope": "openid profile email",
- "response_type": "code",
- "image_url": "https://provider.com/account_image"
- }
- */
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * TODO:
  *  some config may not have all the fields list here, need to add annotation to make field optional
  */
-public class Provider {
-    private String name;
-    private String issuer;
-    private String client_id;
-    private String client_secret;
-    private String redirect_uri;
-    private String authorization_endpoint;
-    private String token_endpoint;
-    private String userinfo_endpoint;
-    private String jwks_uri;
-    private String scope;
-    private String response_type;
-    private String image_url;
 
-    public String getName() {
-        return name;
+public class Provider {
+    @JsonProperty("login_hint")
+    private String loginHint;
+    private String issuer;
+    @JsonProperty("client_id")
+    private String clientId;
+    @JsonProperty("client_secret")
+    private String clientSecret;
+    @JsonProperty("redirect_uri")
+    private String redirectUri;
+    @JsonProperty("authorization_endpoint")
+    private String authorizationEndpoint;
+    @JsonProperty("token_endpoint")
+    private String tokenEndpoint;
+    @JsonProperty("userinfo_endpoint")
+    private String userinfoEndpoint;
+    @JsonProperty("jwks_uri")
+    private String jwksUri;
+    private String scope;
+    @JsonProperty("response_type")
+    private String responseType;
+
+    public String getLoginHint() {
+        return loginHint;
+    }
+
+    public void setLoginHint(String loginHint) {
+        this.loginHint = loginHint;
     }
 
     public String getIssuer() {
         return issuer;
     }
 
-    public String getClient_id() {
-        return client_id;
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
     }
 
-    public String getClient_secret() {
-        return client_secret;
+    public String getClientId() {
+        return clientId;
     }
 
-    public String getRedirect_uri() {
-        return redirect_uri;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    public String getAuthorization_endpoint() {
-        return authorization_endpoint;
+    public String getClientSecret() {
+        return clientSecret;
     }
 
-    public String getToken_endpoint() {
-        return token_endpoint;
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
     }
 
-    public String getUserinfo_endpoint() {
-        return userinfo_endpoint;
+    public String getRedirectUri() {
+        return redirectUri;
     }
 
-    public String getJwks_uri() {
-        return jwks_uri;
+    public void setRedirectUri(String redirectUri) {
+        this.redirectUri = redirectUri;
+    }
+
+    public String getAuthorizationEndpoint() {
+        return authorizationEndpoint;
+    }
+
+    public void setAuthorizationEndpoint(String authorizationEndpoint) {
+        this.authorizationEndpoint = authorizationEndpoint;
+    }
+
+    public String getTokenEndpoint() {
+        return tokenEndpoint;
+    }
+
+    public void setTokenEndpoint(String tokenEndpoint) {
+        this.tokenEndpoint = tokenEndpoint;
+    }
+
+    public String getUserinfoEndpoint() {
+        return userinfoEndpoint;
+    }
+
+    public void setUserinfoEndpoint(String userinfoEndpoint) {
+        this.userinfoEndpoint = userinfoEndpoint;
+    }
+
+    public String getJwksUri() {
+        return jwksUri;
+    }
+
+    public void setJwksUri(String jwksUri) {
+        this.jwksUri = jwksUri;
     }
 
     public String getScope() {
         return scope;
     }
 
-    public String getResponse_type() {
-        return response_type;
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 
-    public String getImage_url() {
-        return image_url;
+    public String getResponseType() {
+        return responseType;
+    }
+
+    public void setResponseType(String responseType) {
+        this.responseType = responseType;
     }
 }

@@ -3,22 +3,21 @@ package model;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Providers {
+public class Config {
+    private List<String> clients;
     private List<Provider> providers;
 
-    public Providers(List<Provider> providers) {
-        this.providers = providers;
-    }
+    public Config() {}
 
     public List<String> getProviderNames(){
         return providers.stream()
-                .map(Provider::getName)
+                .map(Provider::getLoginHint)
                 .collect(Collectors.toList());
     }
 
     public Provider getProviderByName(String name){
         return providers.stream()
-                .filter(provider -> provider.getName().equals(name))
+                .filter(provider -> provider.getLoginHint().equals(name))
                 .findFirst()
                 .orElse(null);
     }

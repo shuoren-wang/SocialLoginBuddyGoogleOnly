@@ -4,6 +4,7 @@ import manager.SessionHandler;
 import manager.SocialServerRequestHandler;
 import model.Session;
 import model.Token;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.LogManager;
@@ -80,17 +81,22 @@ public class Authenticate {
         //todo put in one class
         Session session = SessionHandler.getSession(appState, headers);
         String clientState = session.getClientState();
-        String clientRedirectUri = session.getClientRedirectUrl();
+        String clientRedirectUri = session.getClientRedirectUri();
 
         Token token = SocialServerRequestHandler.getTokenFromSocialServer(TestConstant.GOOGLE_URL_TOKEN, code);
-        String accessToken = token.getAccessToken();
         String idToken = token.getIdToken();
-        String userInfo = SocialServerRequestHandler.getUserInfo(TestConstant.GOOGLE_URL_USERINFO, accessToken);
-
+        String userInfo = Base64.encodeBase64URLSafeString(SocialServerRequestHandler.getUserInfo(TestConstant.GOOGLE_URL_USERINFO, token.getAccessToken())
+.getBytes());
         SessionHandler.removeState(appState);
         LOGGER.info("Removed SocialLoginBuddy state [" + appState + "]");
 
-        String tmpAutoPost = "<html>\n" +
+        return Response
+                .ok(getAutoPostContent(clientRedirectUri, userInfo, idToken, clientState))
+                .build();
+    }
+
+    private String getAutoPostContent(String clientRedirectUri, String userInfo, String idToken, String clientState){
+        return "<html>\n" +
                 "<HEAD>\n" +
                 "  <META HTTP-EQUIV='PRAGMA' CONTENT='NO-CACHE'>\n" +
                 "  <META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>\n" +
@@ -112,10 +118,5 @@ public class Authenticate {
                 "      </form>\n" +
                 "   </body>\n" +
                 "</html>";
-
-
-        return Response
-                .ok(tmpAutoPost)
-                .build();
     }
 }
